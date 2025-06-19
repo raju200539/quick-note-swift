@@ -49,7 +49,7 @@ const Index = () => {
               QuickNotes
             </h1>
             <p className="text-gray-600 text-lg">
-              ⚡ Fast, simple, and elegant note-taking
+              Fast and simple note-taking
             </p>
           </div>
         </div>
@@ -64,14 +64,6 @@ const Index = () => {
               <div className="text-center">
                 <div className="text-2xl font-bold text-gray-800">{notes.length}</div>
                 <div className="text-sm text-gray-600">Total Notes</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">📱</div>
-                <div className="text-sm text-gray-600">Mobile Ready</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">☁️</div>
-                <div className="text-sm text-gray-600">Cloud-Native</div>
               </div>
             </div>
             <button
@@ -130,9 +122,6 @@ const Index = () => {
         <div className="max-w-6xl mx-auto px-4 py-8 text-center">
           <p className="text-gray-600">
             Built with ❤️ using React & Tailwind CSS
-          </p>
-          <p className="text-sm text-gray-500 mt-2">
-            🚫 No login required • ⚡ Instant loading • 📱 Mobile-ready
           </p>
         </div>
       </footer>
