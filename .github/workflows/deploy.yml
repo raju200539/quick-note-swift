@@ -10,23 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Deploy to EC2 via SSH
+    - name: Decode base64 SSH key
+      run: |
+        echo "${{ secrets.EC2_SSH_KEY_B64 }}" | base64 -d > private_key.pem
+        chmod 600 private_key.pem
+
+    - name: Deploy via SSH
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
         port: ${{ secrets.EC2_PORT }}
+        key_path: private_key.pem
         script: |
-          if [ ! -d "quick-notes-app" ]; then
-            git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git quick-notes-app
+          if [ ! -d "quick-note-swift" ]; then
+            git clone https://github.com/raju200539/quick-note-swift.git
           else
-            cd quick-notes-app && git pull origin main && cd ..
+            cd quick-note-swift && git pull origin main && cd ..
           fi
-          cd quick-notes-app
+          cd quick-note-swift
           sudo docker rm -f notes-app || true
           sudo docker build -t notes-app .
           sudo docker run -d -p 80:80 --name notes-app notes-app
