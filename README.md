@@ -1,5 +1,4 @@
-
-# QuickNotes
+Quick notes
 
 A fast and simple note-taking application built with React.
 
