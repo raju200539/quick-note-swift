@@ -21,7 +21,7 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, onDelete }) => {
     setIsDeleting(true);
     setTimeout(() => {
       onDelete(note.id);
-    }, 200);
+    }, 100);
   };
 
   const formatDate = (date: Date) => {
@@ -35,8 +35,8 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, onDelete }) => {
 
   return (
     <div 
-      className={`bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 dark:border-gray-700/50 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group ${
-        isDeleting ? 'scale-95 opacity-0' : ''
+      className={`bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200/50 dark:border-gray-700/50 shadow-sm hover:shadow-lg transition-all duration-150 transform hover:-translate-y-1 group active:scale-95 ${
+        isDeleting ? 'scale-95 opacity-0 transition-all duration-150' : ''
       }`}
     >
       <div className="flex justify-between items-start mb-4">
@@ -45,7 +45,7 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, onDelete }) => {
         </div>
         <button
           onClick={handleDelete}
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
+          className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 active:scale-90"
         >
           <Trash2 size={16} />
         </button>

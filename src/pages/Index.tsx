@@ -78,7 +78,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-150">
       {/* Header */}
       <header className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50 sticky top-0 z-40 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
@@ -115,7 +115,7 @@ const Index = () => {
             </div>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-500 dark:to-blue-500 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:from-indigo-700 hover:to-blue-700 dark:hover:from-indigo-600 dark:hover:to-blue-600 transition-all duration-200 transform hover:scale-105 shadow-lg text-sm sm:text-base"
+              className="flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-500 dark:to-blue-500 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:from-indigo-700 hover:to-blue-700 dark:hover:from-indigo-600 dark:hover:to-blue-600 transition-all duration-150 transform hover:scale-105 shadow-lg text-sm sm:text-base active:scale-95"
             >
               <Plus size={18} />
               <span className="hidden sm:inline">Add Note</span>
@@ -132,7 +132,7 @@ const Index = () => {
             <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm sm:text-base">Click the + button to create your first note!</p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-500 dark:to-blue-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl hover:from-indigo-700 hover:to-blue-700 dark:hover:from-indigo-600 dark:hover:to-blue-600 transition-all duration-200 transform hover:scale-105 shadow-lg text-sm sm:text-base"
+              className="bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-500 dark:to-blue-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl hover:from-indigo-700 hover:to-blue-700 dark:hover:from-indigo-600 dark:hover:to-blue-600 transition-all duration-150 transform hover:scale-105 shadow-lg text-sm sm:text-base active:scale-95"
             >
               Create First Note
             </button>
@@ -153,7 +153,7 @@ const Index = () => {
       {/* Floating Action Button - Mobile */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="sm:hidden fixed bottom-6 right-6 bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-500 dark:to-blue-500 text-white p-4 rounded-full shadow-2xl hover:from-indigo-700 hover:to-blue-700 dark:hover:from-indigo-600 dark:hover:to-blue-600 transition-all duration-200 transform hover:scale-110 z-50"
+        className="sm:hidden fixed bottom-6 right-6 bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-500 dark:to-blue-500 text-white p-4 rounded-full shadow-2xl hover:from-indigo-700 hover:to-blue-700 dark:hover:from-indigo-600 dark:hover:to-blue-600 transition-all duration-150 transform hover:scale-110 z-50 active:scale-95"
       >
         <Plus size={24} />
       </button>
