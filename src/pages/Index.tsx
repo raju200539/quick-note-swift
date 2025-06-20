@@ -78,20 +78,20 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 py-6">
+      <header className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50 sticky top-0 z-40 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           <div className="flex items-center justify-between">
             <div className="text-center flex-1">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 dark:from-indigo-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-1 sm:mb-2">
                 QuickNotes
               </h1>
-              <p className="text-gray-600 dark:text-gray-300 text-lg">
+              <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg">
                 Fast and simple note-taking
               </p>
             </div>
-            <div className="absolute right-4">
+            <div className="absolute right-4 sm:right-6 lg:right-8">
               <ThemeToggle />
             </div>
           </div>
@@ -99,45 +99,46 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Stats Bar */}
-        <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-gray-200/50 dark:border-gray-700/50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 border border-slate-200/50 dark:border-slate-700/50 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center space-x-4 sm:space-x-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-800 dark:text-gray-200">{notes.length}</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Total Notes</div>
+                <div className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-200">{notes.length}</div>
+                <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Total Notes</div>
               </div>
               <div className="text-center">
-                <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">💾</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">Auto-saved</div>
+                <div className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">💾</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400">Auto-saved</div>
               </div>
             </div>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="hidden md:flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              className="flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-500 dark:to-blue-500 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:from-indigo-700 hover:to-blue-700 dark:hover:from-indigo-600 dark:hover:to-blue-600 transition-all duration-200 transform hover:scale-105 shadow-lg text-sm sm:text-base"
             >
-              <Plus size={20} />
-              <span>Add Note</span>
+              <Plus size={18} />
+              <span className="hidden sm:inline">Add Note</span>
+              <span className="sm:hidden">Add</span>
             </button>
           </div>
         </div>
 
         {/* Notes Grid */}
         {notes.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">📝</div>
-            <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-2">No notes yet</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">Click the + button to create your first note!</p>
+          <div className="text-center py-12 sm:py-16">
+            <div className="text-5xl sm:text-6xl mb-4">📝</div>
+            <h3 className="text-xl sm:text-2xl font-semibold text-slate-800 dark:text-slate-200 mb-2">No notes yet</h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm sm:text-base">Click the + button to create your first note!</p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white px-8 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-200 transform hover:scale-105 shadow-lg"
+              className="bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-500 dark:to-blue-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl hover:from-indigo-700 hover:to-blue-700 dark:hover:from-indigo-600 dark:hover:to-blue-600 transition-all duration-200 transform hover:scale-105 shadow-lg text-sm sm:text-base"
             >
               Create First Note
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
             {notes.map((note) => (
               <NoteCard
                 key={note.id}
@@ -152,7 +153,7 @@ const Index = () => {
       {/* Floating Action Button - Mobile */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="md:hidden fixed bottom-6 right-6 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white p-4 rounded-full shadow-2xl hover:from-blue-700 hover:to-purple-700 dark:hover:from-blue-600 dark:hover:to-purple-600 transition-all duration-200 transform hover:scale-110 z-50"
+        className="sm:hidden fixed bottom-6 right-6 bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-500 dark:to-blue-500 text-white p-4 rounded-full shadow-2xl hover:from-indigo-700 hover:to-blue-700 dark:hover:from-indigo-600 dark:hover:to-blue-600 transition-all duration-200 transform hover:scale-110 z-50"
       >
         <Plus size={24} />
       </button>
@@ -165,9 +166,9 @@ const Index = () => {
       />
 
       {/* Footer */}
-      <footer className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border-t border-gray-200/50 dark:border-gray-700/50 mt-16">
-        <div className="max-w-6xl mx-auto px-4 py-8 text-center">
-          <p className="text-gray-600 dark:text-gray-400">
+      <footer className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-t border-slate-200/50 dark:border-slate-700/50 mt-12 sm:mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 text-center">
+          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base">
             Built with ❤️ for productivity
           </p>
         </div>

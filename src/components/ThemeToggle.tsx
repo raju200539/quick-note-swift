@@ -2,28 +2,24 @@
 import React from 'react';
 import { Moon, Sun, Monitor } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
 
-  const cycleTheme = () => {
-    if (theme === 'light') {
-      setTheme('dark');
-    } else if (theme === 'dark') {
-      setTheme('system');
-    } else {
-      setTheme('light');
-    }
-  };
-
   const getIcon = () => {
     switch (theme) {
       case 'light':
-        return <Sun size={20} />;
+        return <Sun size={18} />;
       case 'dark':
-        return <Moon size={20} />;
+        return <Moon size={18} />;
       default:
-        return <Monitor size={20} />;
+        return <Monitor size={18} />;
     }
   };
 
@@ -39,16 +35,39 @@ const ThemeToggle = () => {
   };
 
   return (
-    <button
-      onClick={cycleTheme}
-      className="flex items-center space-x-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-      title={`Switch to ${theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light'} mode`}
-    >
-      {getIcon()}
-      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        {getThemeLabel()}
-      </span>
-    </button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex items-center space-x-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 shadow-sm">
+          {getIcon()}
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:inline">
+            {getThemeLabel()}
+          </span>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 shadow-lg">
+        <DropdownMenuItem
+          onClick={() => setTheme('light')}
+          className="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
+        >
+          <Sun size={16} />
+          <span>Light</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => setTheme('dark')}
+          className="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
+        >
+          <Moon size={16} />
+          <span>Dark</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => setTheme('system')}
+          className="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
+        >
+          <Monitor size={16} />
+          <span>System</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
