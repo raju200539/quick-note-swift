@@ -1,33 +1,70 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import NoteCard from '../components/NoteCard';
 import AddNoteModal from '../components/AddNoteModal';
 
 interface Note {
   id: string;
+  title: string;
   content: string;
   createdAt: Date;
 }
 
 const Index = () => {
-  const [notes, setNotes] = useState<Note[]>([
-    {
-      id: '1',
-      content: 'Welcome to QuickNotes! 📝 Start capturing your ideas instantly.',
-      createdAt: new Date()
-    },
-    {
-      id: '2', 
-      content: 'This is your second note. Click the + button to add more notes!',
-      createdAt: new Date()
-    }
-  ]);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const addNote = (content: string) => {
+  // Load notes from localStorage on component mount
+  useEffect(() => {
+    const savedNotes = localStorage.getItem('quicknotes-data');
+    if (savedNotes) {
+      try {
+        const parsedNotes = JSON.parse(savedNotes).map((note: any) => ({
+          ...note,
+          createdAt: new Date(note.createdAt)
+        }));
+        setNotes(parsedNotes);
+      } catch (error) {
+        console.error('Error loading notes from localStorage:', error);
+        // If there's an error, initialize with welcome notes
+        initializeWelcomeNotes();
+      }
+    } else {
+      // First time user - show welcome notes
+      initializeWelcomeNotes();
+    }
+  }, []);
+
+  // Save notes to localStorage whenever notes change
+  useEffect(() => {
+    if (notes.length > 0 || localStorage.getItem('quicknotes-data')) {
+      localStorage.setItem('quicknotes-data', JSON.stringify(notes));
+    }
+  }, [notes]);
+
+  const initializeWelcomeNotes = () => {
+    const welcomeNotes: Note[] = [
+      {
+        id: '1',
+        title: 'Welcome to QuickNotes! 📝',
+        content: 'Start capturing your ideas instantly. Your notes will be saved automatically in this browser.',
+        createdAt: new Date()
+      },
+      {
+        id: '2', 
+        title: 'Getting Started',
+        content: 'Click the + button to add more notes! Each note can have a title and content.',
+        createdAt: new Date()
+      }
+    ];
+    setNotes(welcomeNotes);
+  };
+
+  const addNote = (title: string, content: string) => {
     const newNote: Note = {
       id: Date.now().toString(),
+      title: title.trim() || 'Untitled Note',
       content,
       createdAt: new Date()
     };
@@ -64,6 +101,10 @@ const Index = () => {
               <div className="text-center">
                 <div className="text-2xl font-bold text-gray-800">{notes.length}</div>
                 <div className="text-sm text-gray-600">Total Notes</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-semibold text-blue-600">💾</div>
+                <div className="text-xs text-gray-500">Auto-saved</div>
               </div>
             </div>
             <button

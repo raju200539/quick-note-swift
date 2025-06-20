@@ -5,22 +5,25 @@ import { X, Plus } from 'lucide-react';
 interface AddNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (content: string) => void;
+  onAdd: (title: string, content: string) => void;
 }
 
 const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onAdd }) => {
+  const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
   useEffect(() => {
     if (isOpen) {
+      setTitle('');
       setContent('');
     }
   }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (content.trim()) {
-      onAdd(content.trim());
+    if (title.trim() || content.trim()) {
+      onAdd(title, content.trim());
+      setTitle('');
       setContent('');
     }
   };
@@ -54,18 +57,34 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onAdd }) =
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6">
+          {/* Title Field */}
+          <div className="mb-4">
+            <label htmlFor="note-title" className="block text-sm font-medium text-gray-700 mb-2">
+              Title
+            </label>
+            <input
+              id="note-title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter note title..."
+              className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder-gray-400"
+              autoFocus
+            />
+          </div>
+
+          {/* Content Field */}
           <div className="mb-6">
             <label htmlFor="note-content" className="block text-sm font-medium text-gray-700 mb-2">
-              What's on your mind?
+              Content
             </label>
             <textarea
               id="note-content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="Start typing your note here..."
+              placeholder="What's on your mind?"
               className="w-full h-32 p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-800 placeholder-gray-400"
-              autoFocus
             />
             <div className="flex justify-between items-center mt-2">
               <p className="text-xs text-gray-500">
@@ -88,7 +107,7 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onAdd }) =
             </button>
             <button
               type="submit"
-              disabled={!content.trim()}
+              disabled={!title.trim() && !content.trim()}
               className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
             >
               Add Note

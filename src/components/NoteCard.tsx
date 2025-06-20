@@ -4,6 +4,7 @@ import { Trash2 } from 'lucide-react';
 
 interface Note {
   id: string;
+  title: string;
   content: string;
   createdAt: Date;
 }
@@ -50,7 +51,15 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, onDelete }) => {
         </button>
       </div>
       
-      <div className="text-gray-800 leading-relaxed whitespace-pre-wrap break-words">
+      {/* Note Title */}
+      <div className="mb-3">
+        <h3 className="font-semibold text-gray-900 text-lg leading-tight break-words">
+          {note.title}
+        </h3>
+      </div>
+      
+      {/* Note Content */}
+      <div className="text-gray-700 leading-relaxed whitespace-pre-wrap break-words text-sm">
         {note.content}
       </div>
       
