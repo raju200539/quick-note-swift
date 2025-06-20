@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Deploy to EC2 via SSH
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        port: ${{ secrets.EC2_PORT }}
+        script: |
+          if [ ! -d "quick-notes-app" ]; then
+            git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git quick-notes-app
+          else
+            cd quick-notes-app && git pull origin main && cd ..
+          fi
+          cd quick-notes-app
+          sudo docker rm -f notes-app || true
+          sudo docker build -t notes-app .
+          sudo docker run -d -p 80:80 --name notes-app notes-app
