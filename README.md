@@ -1,4 +1,4 @@
-## Quick notes - by Raju
+# Quick notes - by Raju
 
 A fast and simple note-taking application built with React.
 
