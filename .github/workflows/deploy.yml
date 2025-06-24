@@ -41,7 +41,7 @@ jobs:
           sudo docker rm notes-app || true
 
           echo "🐳 Building Docker image..."
-          sudo docker buildx --no-cache -t notes-app .
+          sudo docker buildx build --no-cache -t notes-app .
 
           echo "🚀 Running new container..."
           sudo docker run -d -p 80:80 --name notes-app notes-app
