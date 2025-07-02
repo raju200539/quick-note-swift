@@ -64,7 +64,10 @@ const App = () => {
 
   if (authMode === 'signin') {
     return (
-      <Authenticator>
+      <Authenticator 
+        signUpAttributes={['email']}
+        hideSignUp={false}
+      >
         {({ signOut, user }) => (
           <QueryClientProvider client={queryClient}>
             <ThemeProvider defaultTheme="system" storageKey="quicknotes-theme">
