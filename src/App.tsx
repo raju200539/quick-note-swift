@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,34 +11,113 @@ import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { Amplify } from "aws-amplify";
 import awsExports from "./amplify-config";
+import { Button } from "./components/ui/button";
 
 Amplify.configure(awsExports);
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <Authenticator>
-    {({ signOut, user }) => (
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme="system" storageKey="quicknotes-theme">
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <button onClick={signOut} className="bg-red-600 px-4 py-2 rounded mb-4">
-              Sign Out
-            </button>
-            <p className="text-lg text-white pl-4">Welcome, {user.username}!</p>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    )}
-  </Authenticator>
-);
+const App = () => {
+  const [authMode, setAuthMode] = useState<'none' | 'signin' | 'guest'>('none');
+
+  if (authMode === 'none') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center">
+        <div className="max-w-md w-full mx-4">
+          <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl p-8 shadow-lg border border-slate-200/50 dark:border-slate-700/50">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 dark:from-indigo-400 dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">
+                QuickNotes
+              </h1>
+              <p className="text-slate-600 dark:text-slate-300">
+                Fast and simple note-taking
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              <Button 
+                onClick={() => setAuthMode('signin')}
+                className="w-full"
+                size="lg"
+              >
+                Sign In / Sign Up
+              </Button>
+              
+              <Button 
+                onClick={() => setAuthMode('guest')}
+                variant="outline"
+                className="w-full"
+                size="lg"
+              >
+                Continue as Guest
+              </Button>
+            </div>
+            
+            <p className="text-xs text-slate-500 dark:text-slate-400 text-center mt-4">
+              Guest mode saves notes locally. Sign in to sync across devices.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (authMode === 'signin') {
+    return (
+      <Authenticator>
+        {({ signOut, user }) => (
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider defaultTheme="system" storageKey="quicknotes-theme">
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <div className="flex items-center gap-4 p-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50">
+                  <button onClick={signOut} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    Sign Out
+                  </button>
+                  <p className="text-slate-800 dark:text-slate-200">Welcome, {user.username}!</p>
+                </div>
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </BrowserRouter>
+              </TooltipProvider>
+            </ThemeProvider>
+          </QueryClientProvider>
+        )}
+      </Authenticator>
+    );
+  }
+
+  // Guest mode
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider defaultTheme="system" storageKey="quicknotes-theme">
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <div className="flex items-center gap-4 p-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50">
+            <Button 
+              onClick={() => setAuthMode('signin')}
+              variant="outline"
+              size="sm"
+            >
+              Sign In
+            </Button>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">Guest Mode - notes saved locally</p>
+          </div>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
