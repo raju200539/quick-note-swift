@@ -62,78 +62,48 @@ const App = () => {
     );
   }
 
- if (authMode === 'signin') {
-  return (
-    <Authenticator
-      components={{
-        SignUp: {
-          FormFields() {
-            return (
-              <>
-                <Authenticator.SignUp.FormField
-                  name="email"
-                  label="Email"
-                  type="email"
-                  required
-                />
-                <Authenticator.SignUp.FormField
-                  name="password"
-                  label="Password"
-                  type="password"
-                  required
-                />
-                <Authenticator.SignUp.FormField
-                  name="birthdate"
-                  label="Birthdate (YYYY-MM-DD)"
-                  required
-                />
-                <Authenticator.SignUp.FormField
-                  name="gender"
-                  label="Gender"
-                  required
-                />
-                <Authenticator.SignUp.FormField
-                  name="given_name"
-                  label="First Name"
-                  required
-                />
-              </>
-            );
+  if (authMode === 'signin') {
+    return (
+      <Authenticator 
+        signUpAttributes={['email']}
+        hideSignUp={false}
+        components={{
+          SignUp: {
+            FormFields() {
+              return (
+                <>
+                  <Authenticator.SignUp.FormFields />
+                </>
+              );
+            },
           },
-        },
-      }}
-    >
-      {({ signOut, user }) => (
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider defaultTheme="system" storageKey="quicknotes-theme">
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50">
-                <button
-                  onClick={signOut}
-                  className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm sm:text-base"
-                >
-                  Sign Out
-                </button>
-                <p className="text-slate-800 dark:text-slate-200 text-sm sm:text-base">
-                  Welcome, {user?.username}!
-                </p>
-              </div>
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
-            </TooltipProvider>
-          </ThemeProvider>
-        </QueryClientProvider>
-      )}
-    </Authenticator>
-  );
-}
-
+        }}
+      >
+        {({ signOut, user }) => (
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider defaultTheme="system" storageKey="quicknotes-theme">
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50">
+                  <button onClick={signOut} className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm sm:text-base">
+                    Sign Out
+                  </button>
+                  <p className="text-slate-800 dark:text-slate-200 text-sm sm:text-base">Welcome, {user.username}!</p>
+                </div>
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </BrowserRouter>
+              </TooltipProvider>
+            </ThemeProvider>
+          </QueryClientProvider>
+        )}
+      </Authenticator>
+    );
+  }
 
   // Guest mode
   return (
