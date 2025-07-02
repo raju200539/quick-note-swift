@@ -11,9 +11,6 @@ RUN npm install
 # Copy the rest of the app
 COPY . .
 
-# ✅ Add this environment variable to increase memory limit
-ENV NODE_OPTIONS=--max-old-space-size=2048
-
 # Build the Vite app (creates /dist)
 RUN npm run build
 
