@@ -62,19 +62,41 @@ const App = () => {
     );
   }
 
-  if (authMode === 'signin') {
+ if (authMode === 'signin') {
   return (
     <Authenticator
-      signUpAttributes={['email', 'birthdate', 'gender', 'given_name']}
       components={{
         SignUp: {
           FormFields() {
             return (
               <>
-                <Authenticator.SignUp.FormFields />
-                <Authenticator.SignUp.FormField name="birthdate" label="Birthdate" required />
-                <Authenticator.SignUp.FormField name="gender" label="Gender" required />
-                <Authenticator.SignUp.FormField name="given_name" label="First Name" required />
+                <Authenticator.SignUp.FormField
+                  name="email"
+                  label="Email"
+                  type="email"
+                  required
+                />
+                <Authenticator.SignUp.FormField
+                  name="password"
+                  label="Password"
+                  type="password"
+                  required
+                />
+                <Authenticator.SignUp.FormField
+                  name="birthdate"
+                  label="Birthdate (YYYY-MM-DD)"
+                  required
+                />
+                <Authenticator.SignUp.FormField
+                  name="gender"
+                  label="Gender"
+                  required
+                />
+                <Authenticator.SignUp.FormField
+                  name="given_name"
+                  label="First Name"
+                  required
+                />
               </>
             );
           },
@@ -111,6 +133,7 @@ const App = () => {
     </Authenticator>
   );
 }
+
 
   // Guest mode
   return (
