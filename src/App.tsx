@@ -67,6 +67,17 @@ const App = () => {
       <Authenticator 
         signUpAttributes={['email']}
         hideSignUp={false}
+        components={{
+          SignUp: {
+            FormFields() {
+              return (
+                <>
+                  <Authenticator.SignUp.FormFields />
+                </>
+              );
+            },
+          },
+        }}
       >
         {({ signOut, user }) => (
           <QueryClientProvider client={queryClient}>
