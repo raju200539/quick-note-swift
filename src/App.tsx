@@ -66,6 +66,20 @@ const App = () => {
   return (
     <Authenticator
       signUpAttributes={['email', 'birthdate', 'gender', 'given_name']}
+      components={{
+        SignUp: {
+          FormFields() {
+            return (
+              <>
+                <Authenticator.SignUp.FormFields />
+                <Authenticator.SignUp.FormField name="birthdate" label="Birthdate" required />
+                <Authenticator.SignUp.FormField name="gender" label="Gender" required />
+                <Authenticator.SignUp.FormField name="given_name" label="First Name" required />
+              </>
+            );
+          },
+        },
+      }}
     >
       {({ signOut, user }) => (
         <QueryClientProvider client={queryClient}>
