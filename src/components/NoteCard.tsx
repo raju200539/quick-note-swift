@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit, Bell } from 'lucide-react';
 
 interface Note {
   id: string;
   title: string;
   content: string;
   createdAt: Date;
+  notificationTime?: Date;
 }
 
 interface NoteCardProps {
@@ -41,8 +42,16 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, onDelete, onEdit }) => {
       }`}
     >
       <div className="flex justify-between items-start mb-4">
-        <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-          {formatDate(note.createdAt)}
+        <div className="flex flex-col space-y-1">
+          <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+            {formatDate(note.createdAt)}
+          </div>
+          {note.notificationTime && note.notificationTime > new Date() && (
+            <div className="flex items-center space-x-1 text-xs text-blue-600 dark:text-blue-400">
+              <Bell size={12} />
+              <span>{formatDate(note.notificationTime)}</span>
+            </div>
+          )}
         </div>
         <div className="flex space-x-1">
           <button

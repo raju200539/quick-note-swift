@@ -6,6 +6,7 @@ import AddNoteModal from '../components/AddNoteModal';
 import EditNoteModal from '../components/EditNoteModal';
 import ThemeToggle from '../components/ThemeToggle';
 import { useToast } from "@/hooks/use-toast";
+import { NotificationService } from '../utils/notificationService';
 
 interface Note {
   id: string;
@@ -22,6 +23,11 @@ const Index = () => {
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const { toast } = useToast();
 
+  // Initialize notification service
+  useEffect(() => {
+    NotificationService.initialize();
+  }, []);
+
   // Load notes from localStorage on component mount
   useEffect(() => {
     const savedNotes = localStorage.getItem('quicknotes-data');
@@ -33,6 +39,18 @@ const Index = () => {
           notificationTime: note.notificationTime ? new Date(note.notificationTime) : undefined
         }));
         setNotes(parsedNotes);
+        
+        // Reschedule notifications for existing notes
+        parsedNotes.forEach((note: Note) => {
+          if (note.notificationTime && note.notificationTime > new Date()) {
+            NotificationService.scheduleNotification(
+              note.id,
+              note.title,
+              note.content,
+              note.notificationTime
+            );
+          }
+        });
       } catch (error) {
         console.error('Error loading notes from localStorage:', error);
         // If there's an error, initialize with welcome notes
@@ -51,34 +69,20 @@ const Index = () => {
     }
   }, [notes]);
 
-  // Check for notifications
+  // Check for notifications (fallback for immediate notifications)
   useEffect(() => {
     const checkNotifications = () => {
       const now = new Date();
       notes.forEach(note => {
         if (note.notificationTime && note.notificationTime <= now) {
-          // Request notification permission if not granted
-          if (Notification.permission === 'granted') {
-            new Notification(`Reminder: ${note.title}`, {
-              body: note.content.substring(0, 100) + (note.content.length > 100 ? '...' : ''),
-              icon: '/favicon-r.svg'
-            });
-          } else if (Notification.permission !== 'denied') {
-            Notification.requestPermission().then(permission => {
-              if (permission === 'granted') {
-                new Notification(`Reminder: ${note.title}`, {
-                  body: note.content.substring(0, 100) + (note.content.length > 100 ? '...' : ''),
-                  icon: '/favicon-r.svg'
-                });
-              }
-            });
-          }
-          
           // Show toast notification
           toast({
             title: `Reminder: ${note.title}`,
             description: note.content.substring(0, 100) + (note.content.length > 100 ? '...' : ''),
           });
+          
+          // Also show browser notification as fallback
+          NotificationService.showImmediateNotification(note.title, note.content);
           
           // Remove notification time after showing
           setNotes(prev => prev.map(n => 
@@ -88,7 +92,7 @@ const Index = () => {
       });
     };
 
-    const interval = setInterval(checkNotifications, 60000); // Check every minute
+    const interval = setInterval(checkNotifications, 30000); // Check every 30 seconds
     return () => clearInterval(interval);
   }, [notes, toast]);
 
@@ -118,6 +122,17 @@ const Index = () => {
       createdAt: new Date(),
       notificationTime
     };
+    
+    // Schedule background notification if time is set
+    if (notificationTime) {
+      NotificationService.scheduleNotification(
+        newNote.id,
+        newNote.title,
+        newNote.content,
+        notificationTime
+      );
+    }
+    
     setNotes(prev => [newNote, ...prev]);
     setIsModalOpen(false);
   };
@@ -138,6 +153,8 @@ const Index = () => {
   };
 
   const deleteNote = (id: string) => {
+    // Cancel any scheduled notifications for this note
+    NotificationService.cancelNotification(id);
     setNotes(prev => prev.filter(note => note.id !== id));
   };
 

@@ -13,6 +13,7 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onAdd }) =
   const [content, setContent] = useState('');
   const [enableNotification, setEnableNotification] = useState(false);
   const [notificationMinutes, setNotificationMinutes] = useState(5);
+  const [notificationDateTime, setNotificationDateTime] = useState('');
 
   useEffect(() => {
     if (isOpen) {
@@ -20,20 +21,29 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onAdd }) =
       setContent('');
       setEnableNotification(false);
       setNotificationMinutes(5);
+      setNotificationDateTime('');
     }
   }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim() || content.trim()) {
-      const notificationTime = enableNotification 
-        ? new Date(Date.now() + notificationMinutes * 60 * 1000)
-        : undefined;
+      let notificationTime: Date | undefined;
+      
+      if (enableNotification) {
+        if (notificationDateTime) {
+          notificationTime = new Date(notificationDateTime);
+        } else {
+          notificationTime = new Date(Date.now() + notificationMinutes * 60 * 1000);
+        }
+      }
+      
       onAdd(title, content.trim(), notificationTime);
       setTitle('');
       setContent('');
       setEnableNotification(false);
       setNotificationMinutes(5);
+      setNotificationDateTime('');
     }
   };
 
@@ -127,17 +137,61 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onAdd }) =
             </div>
             
             {enableNotification && (
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Remind me in</span>
-                <input
-                  type="number"
-                  min="1"
-                  max="1440"
-                  value={notificationMinutes}
-                  onChange={(e) => setNotificationMinutes(parseInt(e.target.value) || 5)}
-                  className="w-20 p-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-700 text-center"
-                />
-                <span className="text-sm text-gray-600 dark:text-gray-400">minutes</span>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="quick-reminder"
+                    name="notification-type"
+                    checked={!notificationDateTime}
+                    onChange={() => setNotificationDateTime('')}
+                    className="text-blue-600 focus:ring-blue-500"
+                  />
+                  <label htmlFor="quick-reminder" className="text-sm text-gray-600 dark:text-gray-400">
+                    Quick reminder
+                  </label>
+                </div>
+                
+                {!notificationDateTime && (
+                  <div className="flex items-center space-x-2 ml-6">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Remind me in</span>
+                    <input
+                      type="number"
+                      min="1"
+                      max="1440"
+                      value={notificationMinutes}
+                      onChange={(e) => setNotificationMinutes(parseInt(e.target.value) || 5)}
+                      className="w-20 p-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-700 text-center"
+                    />
+                    <span className="text-sm text-gray-600 dark:text-gray-400">minutes</span>
+                  </div>
+                )}
+                
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="scheduled-reminder"
+                    name="notification-type"
+                    checked={!!notificationDateTime}
+                    onChange={() => setNotificationDateTime(new Date(Date.now() + 60 * 60 * 1000).toISOString().slice(0, 16))}
+                    className="text-blue-600 focus:ring-blue-500"
+                  />
+                  <label htmlFor="scheduled-reminder" className="text-sm text-gray-600 dark:text-gray-400">
+                    Schedule for specific time
+                  </label>
+                </div>
+                
+                {notificationDateTime && (
+                  <div className="ml-6">
+                    <input
+                      type="datetime-local"
+                      value={notificationDateTime}
+                      onChange={(e) => setNotificationDateTime(e.target.value)}
+                      min={new Date().toISOString().slice(0, 16)}
+                      className="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-700"
+                    />
+                  </div>
+                )}
               </div>
             )}
           </div>
