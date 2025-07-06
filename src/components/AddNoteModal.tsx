@@ -5,26 +5,35 @@ import { X, Plus } from 'lucide-react';
 interface AddNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (title: string, content: string) => void;
+  onAdd: (title: string, content: string, notificationTime?: Date) => void;
 }
 
 const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onAdd }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [enableNotification, setEnableNotification] = useState(false);
+  const [notificationMinutes, setNotificationMinutes] = useState(5);
 
   useEffect(() => {
     if (isOpen) {
       setTitle('');
       setContent('');
+      setEnableNotification(false);
+      setNotificationMinutes(5);
     }
   }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim() || content.trim()) {
-      onAdd(title, content.trim());
+      const notificationTime = enableNotification 
+        ? new Date(Date.now() + notificationMinutes * 60 * 1000)
+        : undefined;
+      onAdd(title, content.trim(), notificationTime);
       setTitle('');
       setContent('');
+      setEnableNotification(false);
+      setNotificationMinutes(5);
     }
   };
 
@@ -94,6 +103,43 @@ const AddNoteModal: React.FC<AddNoteModalProps> = ({ isOpen, onClose, onAdd }) =
                 {content.length} characters
               </span>
             </div>
+          </div>
+
+          {/* Notification Section */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Get Notified
+              </label>
+              <button
+                type="button"
+                onClick={() => setEnableNotification(!enableNotification)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                  enableNotification ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-600'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    enableNotification ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+            
+            {enableNotification && (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Remind me in</span>
+                <input
+                  type="number"
+                  min="1"
+                  max="1440"
+                  value={notificationMinutes}
+                  onChange={(e) => setNotificationMinutes(parseInt(e.target.value) || 5)}
+                  className="w-20 p-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-700 text-center"
+                />
+                <span className="text-sm text-gray-600 dark:text-gray-400">minutes</span>
+              </div>
+            )}
           </div>
 
           {/* Actions */}

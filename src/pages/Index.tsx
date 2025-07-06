@@ -3,18 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import NoteCard from '../components/NoteCard';
 import AddNoteModal from '../components/AddNoteModal';
+import EditNoteModal from '../components/EditNoteModal';
 import ThemeToggle from '../components/ThemeToggle';
+import { useToast } from "@/hooks/use-toast";
 
 interface Note {
   id: string;
   title: string;
   content: string;
   createdAt: Date;
+  notificationTime?: Date;
 }
 
 const Index = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingNote, setEditingNote] = useState<Note | null>(null);
+  const { toast } = useToast();
 
   // Load notes from localStorage on component mount
   useEffect(() => {
@@ -23,7 +29,8 @@ const Index = () => {
       try {
         const parsedNotes = JSON.parse(savedNotes).map((note: any) => ({
           ...note,
-          createdAt: new Date(note.createdAt)
+          createdAt: new Date(note.createdAt),
+          notificationTime: note.notificationTime ? new Date(note.notificationTime) : undefined
         }));
         setNotes(parsedNotes);
       } catch (error) {
@@ -44,6 +51,47 @@ const Index = () => {
     }
   }, [notes]);
 
+  // Check for notifications
+  useEffect(() => {
+    const checkNotifications = () => {
+      const now = new Date();
+      notes.forEach(note => {
+        if (note.notificationTime && note.notificationTime <= now) {
+          // Request notification permission if not granted
+          if (Notification.permission === 'granted') {
+            new Notification(`Reminder: ${note.title}`, {
+              body: note.content.substring(0, 100) + (note.content.length > 100 ? '...' : ''),
+              icon: '/favicon-r.svg'
+            });
+          } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+              if (permission === 'granted') {
+                new Notification(`Reminder: ${note.title}`, {
+                  body: note.content.substring(0, 100) + (note.content.length > 100 ? '...' : ''),
+                  icon: '/favicon-r.svg'
+                });
+              }
+            });
+          }
+          
+          // Show toast notification
+          toast({
+            title: `Reminder: ${note.title}`,
+            description: note.content.substring(0, 100) + (note.content.length > 100 ? '...' : ''),
+          });
+          
+          // Remove notification time after showing
+          setNotes(prev => prev.map(n => 
+            n.id === note.id ? { ...n, notificationTime: undefined } : n
+          ));
+        }
+      });
+    };
+
+    const interval = setInterval(checkNotifications, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, [notes, toast]);
+
   const initializeWelcomeNotes = () => {
     const welcomeNotes: Note[] = [
       {
@@ -62,15 +110,31 @@ const Index = () => {
     setNotes(welcomeNotes);
   };
 
-  const addNote = (title: string, content: string) => {
+  const addNote = (title: string, content: string, notificationTime?: Date) => {
     const newNote: Note = {
       id: Date.now().toString(),
       title: title.trim() || 'Untitled Note',
       content,
-      createdAt: new Date()
+      createdAt: new Date(),
+      notificationTime
     };
     setNotes(prev => [newNote, ...prev]);
     setIsModalOpen(false);
+  };
+
+  const editNote = (id: string, title: string, content: string) => {
+    setNotes(prev => prev.map(note => 
+      note.id === id 
+        ? { ...note, title: title.trim() || 'Untitled Note', content }
+        : note
+    ));
+    setIsEditModalOpen(false);
+    setEditingNote(null);
+  };
+
+  const handleEditNote = (note: Note) => {
+    setEditingNote(note);
+    setIsEditModalOpen(true);
   };
 
   const deleteNote = (id: string) => {
@@ -144,6 +208,7 @@ const Index = () => {
                 key={note.id}
                 note={note}
                 onDelete={deleteNote}
+                onEdit={handleEditNote}
               />
             ))}
           </div>
@@ -163,6 +228,17 @@ const Index = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAdd={addNote}
+      />
+
+      {/* Edit Note Modal */}
+      <EditNoteModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingNote(null);
+        }}
+        onEdit={editNote}
+        note={editingNote}
       />
 
       {/* Footer */}

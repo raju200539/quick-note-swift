@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Edit } from 'lucide-react';
 
 interface Note {
   id: string;
@@ -12,9 +12,10 @@ interface Note {
 interface NoteCardProps {
   note: Note;
   onDelete: (id: string) => void;
+  onEdit: (note: Note) => void;
 }
 
-const NoteCard: React.FC<NoteCardProps> = ({ note, onDelete }) => {
+const NoteCard: React.FC<NoteCardProps> = ({ note, onDelete, onEdit }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = () => {
@@ -43,12 +44,20 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, onDelete }) => {
         <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
           {formatDate(note.createdAt)}
         </div>
-        <button
-          onClick={handleDelete}
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 active:scale-90"
-        >
-          <Trash2 size={16} />
-        </button>
+        <div className="flex space-x-1">
+          <button
+            onClick={() => onEdit(note)}
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-gray-400 dark:text-gray-500 hover:text-emerald-500 dark:hover:text-emerald-400 p-1 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20 active:scale-90"
+          >
+            <Edit size={16} />
+          </button>
+          <button
+            onClick={handleDelete}
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 active:scale-90"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
       </div>
       
       {/* Note Title */}
